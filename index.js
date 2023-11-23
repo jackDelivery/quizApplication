@@ -34,6 +34,19 @@ app.use(User);
 
 
 
+app.get(`/`,(req,res)=>{
+  res.status(200).send("Hello Quiz");
+})
+
+app.use("*",(req,res,next)=>{
+  res.status(400).send("Page Not Found!");
+  next()
+})
+
+
+
+
+
 // database connected
 mongoose.connect(process.env.MONGODB).then(() => {
     console.log(`Database Connected!`)
