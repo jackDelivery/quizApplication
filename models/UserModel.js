@@ -17,11 +17,17 @@ const userSchema = new Schema({
         trim: true,
         unique: true
     },
+    role: {
+        type: String,
+        default: "user"
+    },
     dob: {
         type: String,
         required: true,
     },
-
+    refreshToken: {
+        type: String,
+    },
     password: {
         type: String,
         required: true,
@@ -37,6 +43,7 @@ const userSchema = new Schema({
     passwordChangeAt: Date,
 
 },
+
     {
         toJSON: {
             virtuals: true,

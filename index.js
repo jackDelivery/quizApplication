@@ -6,7 +6,7 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 const cloudinary = require('cloudinary');
-
+app.use("/files",express.static("files"))
 
 
 // Configure Cloudinary
@@ -18,7 +18,7 @@ cloudinary.config({
 
 
 const User = require("./routes/userRoute");
-
+const pdf = require("./routes/pdfRoute");
 
 // middleware calling here
 app.use(express.urlencoded({ extended: true }));
@@ -31,7 +31,7 @@ app.use(morgan("tiny"));
 
 // routes calling here
 app.use(User);
-
+app.use(pdf)
 
 
 app.get(`/`,(req,res)=>{

@@ -4,7 +4,7 @@ const generateToken = require("../config/Token");
 const CloudinaryCloud = require("./utils/CloudinaryCloud");
 const sendEmail = require("./utils/SendEmail");
 const bcryptjs = require("bcryptjs");
-
+const generateRefreshToken = require("../config/RefreshToken");
 
 
 
@@ -78,6 +78,7 @@ const login = asyncHandler(async (req, res) => {
         email: user?.email,
         dob: user?.dob,
         profilePhoto: user?.profilePhoto,
+        role: user?.role,
         token: generateToken(user?._id),
       };
 
@@ -90,14 +91,14 @@ const login = asyncHandler(async (req, res) => {
     res.status(500).send({ message: 'Error logging in' });
   }
 
- if (user && (await user.isPasswordmatch(password))) {
+  if (user && (await user.isPasswordmatch(password))) {
     await sendEmail({
       email: user?.email,
       subject: "Ebook Quiz Login",
       message,
     });
   }  // Move the sendEmail() call outside of the try block
- 
+
 });
 
 
@@ -211,7 +212,7 @@ const resetPassword = asyncHandler(async (req, res) => {
     const email = req.body.email;
     const otp = req.body.otp;
     const newPassword = req.body.newPassword;
-  
+
     let message = "Your Password has been Reset Go to Login"
 
     const user = await UserModel.findOne({ email });
@@ -242,4 +243,38 @@ const resetPassword = asyncHandler(async (req, res) => {
 })
 
 
-module.exports = { registerUser, login, allProfiles, getUser, updateProfile, forgetPassword, resetPassword }
+// admin login
+const loginAdmin = asyncHandler(async (req, res) => {
+  const { email, password } = req.body;
+  // check if user exists or not
+  try {
+    const findAdmin = await UserModel.findOne({ email });
+    if (findAdmin.role !== "admin") throw new Error("You are not Admin");
+    if (findAdmin && (await findAdmin.isPasswordmatch(password))) {
+      const refreshToken = await generateRefreshToken(findAdmin?._id);
+      const updateuser = await UserModel.findByIdAndUpdate(
+        findAdmin.id,
+        {
+          refreshToken: refreshToken,
+        },
+        { new: true }
+      );
+      res.json({
+        _id: findAdmin?._id,
+        username: findAdmin?.username,
+        email: findAdmin?.email,
+        role: findAdmin?.role,
+        token: generateToken(findAdmin?._id),
+      });
+    } else {
+      throw new Error("Invalid Credentials");
+    }
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+
+
+
+
+module.exports = { registerUser, login, allProfiles, getUser, updateProfile, forgetPassword, resetPassword, loginAdmin }
