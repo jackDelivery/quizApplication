@@ -14,7 +14,7 @@ router.route("/register").post(profilePhotoUpload.single("image"), profilePhotoR
 router.route("/login").post(login);
 
 // all users
-router.route("/allusers").get(authMiddleware, isAdmin, allProfiles);
+router.route("/allusers").get(authMiddleware, allProfiles);
 
 // get user
 router.route("/user/:id").get(authMiddleware, getUser);

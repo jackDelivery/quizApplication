@@ -18,12 +18,12 @@ cloudinary.config({
 
 
 const User = require("./routes/userRoute");
-const pdf = require("./routes/pdfRoute");
+const file = require("./routes/pdfRoute");
 
 // middleware calling here
-app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-app.use(bodyParser.json());
+app.use(bodyParser.json());  //new line of code
+app.use(bodyParser.urlencoded({ extended: false }));  //new line of code
 app.use(morgan("tiny"));
 
 
@@ -31,7 +31,8 @@ app.use(morgan("tiny"));
 
 // routes calling here
 app.use(User);
-app.use(pdf)
+app.use(file)
+
 
 
 app.get(`/`,(req,res)=>{

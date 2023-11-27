@@ -1,13 +1,17 @@
 const express = require("express");
-const { createPdf } = require('../controllers/pdfController');
-const { Upload, pdfPhotoResize, pdfPhotoUpload } = require("../middleware/UploadImages");
+const { createPdf, getFile } = require('../controllers/pdfController');
+const { Upload } = require("../middleware/UploadImages");
 const router = express.Router();
 
 
 
-router.route("/createupload").post(Upload.single('file'), pdfPhotoUpload.single("image"), pdfPhotoResize, createPdf)
+
+// Assuming Upload middleware handles PDF uploads and profilePhotoUpload handles image uploads
+router.route("/createupload").post(
+  createPdf
+);
 
 
+router.route("/file").get(getFile)
 
-
-module.exports = router
+module.exports = router;

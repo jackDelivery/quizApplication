@@ -1,42 +1,169 @@
 const asyncHandler = require('express-async-handler');
-const { PdfModel } = require('../models/pdfModel');
-const cloudinary = require("cloudinary");
-const CloudinaryCloud = require("../controllers/utils/CloudinaryCloud");
+const File = require('../models/pdfModel');
+// const CloudinaryCloud = require("../controllers/utils/CloudinaryCloud");
+const cloudinary = require('cloudinary').v2;
+const fs = require('fs');
+const path = require('path')
+const PDFDocument = require('pdfkit');
+const cloud = require("./pdfClodinary");
+
+// const { CloudinaryStorage } = require('multer-storage-cloudinary');
+
 
 
 const createPdf = asyncHandler(async (req, res) => {
   try {
-    const file = req.file;
+    const filename = req.body.filename;
+    const pdfPath = path.join('data', 'pdf', filename + '.pdf')
+    const pdfDoc = new PDFDocument()
 
-    if (!file) {
-      return res.status(400).send('No file uploaded');
+    res.setHeader('Content-Disposition', 'attachment; filename="' + filename + '" ')
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Content-Type', 'application/pdf')
+    res.status(201)
+    pdfDoc.pipe(fs.createWriteStream(pdfPath));
+    await pdfDoc.pipe(res);
+    const content = await req.body.content
+    pdfDoc.text(content)
+
+    cloud.uploads(pdfPath).then((result) => {
+      const pdfFile = {
+        pdfName: filename,
+        pdfUrl: result.url,
+        pdfId: result.id
+      }
+      console.log('pdf results--', pdfFile.pdfUrl)
+    })
+    pdfDoc.end();
+  } catch (error) {
+    res.status(400).json({ message: 'An error occured in process' });
+  }
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const createpdf = asyncHandler(async (req, res) => {
+//   try {
+//     const { title } = req.body;
+//     const pdfPath = req.files.pdf[0].path;
+//     const imagePath = req.files.image[0].path;
+
+//     // Upload PDF to Cloudinary
+//     const pdfUploadResult = await cloudinary.uploader.upload(pdfPath, {
+//       resource_type: "raw",
+//       format: 'pdf',
+//     });
+//     const pdfUrl = pdfUploadResult?.secure_url;
+
+//     // Upload image to Cloudinary
+//     const imageUploadResult = await cloudinary.uploader.upload(imagePath);
+//     const thumbnailUrl = imageUploadResult?.secure_url;
+
+//     // Save PDF and thumbnail URL to MongoDB
+//     const newPDF = new File({ title, pdfUrl, thumbnailUrl });
+//     await newPDF.save();
+
+//     res.json({
+//       message: 'PDF uploaded successfully',
+//       data: {
+//         title: newPDF.title,
+//         pdfUrl: pdfUrl,
+//         thumbnailUrl: thumbnailUrl,
+//       },
+//     });
+//   } catch (error) {
+//     console.error(error);
+//     res.status(500).send(error);
+//   }
+// });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// const createpdf = asyncHandler(async (req, res) => {
+//   try {
+//     const { title } = req.body;
+//     const pdfPath = req.files.pdf[0].path;
+//     const imagePath = req.files.image[0].path;
+
+//     // Upload PDF to Cloudinary
+//     const uploadResult = await cloudinary.uploader.upload(pdfPath, { resource_type: 'raw' });
+//     const pdfUrl = uploadResult?.secure_url;
+
+//     // Upload image to Cloudinary
+//     const imageUploadResult = await cloudinary.uploader.upload(imagePath);
+//     const thumbnailUrl = imageUploadResult?.secure_url;
+
+//     // Generate thumbnail image
+
+
+//     // Save PDF and thumbnail URL to MongoDB
+//     const newPDF = new File({ title, pdfUrl, thumbnailUrl });
+//     await newPDF.save();
+
+//     res.json({
+//       message: 'PDF uploaded successfully',
+//       data: {
+//         title: newPDF.title,
+//         pdfUrl: pdfUrl,
+//         thumbnailUrl: thumbnailUrl
+//       },
+//     });
+//   } catch (error) {
+//     res.status(500).send(error)
+//   }
+
+// })
+
+
+
+
+
+
+// get files
+
+const getFile = asyncHandler(async (req, res) => {
+  try {
+    const data = await PdfModel.find({});
+
+    if (!data) {
+      return res.status(400).send("No data found")
     }
 
-    const { title } = req.body;
-    const filename = req.file.filename;
+    res.status(200).send(data);
 
-    const localPath = `public/images/pdfimages/${req.file.filename}`;
-
-    let imgUploaded = await CloudinaryCloud(localPath);
-
-    // Create a new PdfModel instance
-    const newPdf = new PdfModel({
-      title: title,
-      pdf: filename,
-      image: imgUploaded?.url
-    });
-
-    // Save the instance to the database
-    await newPdf.save();
-
-    res.status(201).json({
-      message: 'Your pdf has been successfully uploaded',
-      pdfDetails: newPdf,
-    });
   } catch (error) {
-    console.error(error);
-    res.status(500).send('Internal Server Error');
+    res.status(500).send(error)
   }
-});
+})
 
-module.exports = { createPdf };
+
+module.exports = { createPdf, getFile };
