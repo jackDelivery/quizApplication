@@ -24,6 +24,9 @@ const multerFilter = (req, file, cb) => {
   }
 };
 
+
+
+
 // pdf
 
 const Storage = multer.diskStorage({
@@ -95,4 +98,4 @@ const profilePhotoResize = async (req, res, next) => {
   next();
 };
 
-module.exports = { profilePhotoUpload, profilePhotoResize, Upload,pdfPhotoUpload,pdfPhotoResize }
+module.exports = { profilePhotoUpload, profilePhotoResize,pdfPhotoUpload,pdfPhotoResize,Upload }
