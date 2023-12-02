@@ -4,13 +4,12 @@ const { Schema } = mongoose;
 
 const questionSchema = new Schema({
     level: {
-        type: Number,
+        type: String,
         required: true,
         trim: true,
-        unique: true
     },
     id: {
-        type: Number,
+        type: String,
         required: true
     },
     question: {
@@ -26,7 +25,7 @@ const questionSchema = new Schema({
         }
     },
     answer: {
-        type: Number,
+        type: String,
         required: true
     },
 },
