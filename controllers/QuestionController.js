@@ -5,11 +5,6 @@ const { Question } = require("../models/QuestionModel");
 const createQuestion = asyncHandler(async (req, res) => {
     const { level, id, question, options, answer } = req.body;
     try {
-        const existingQuiz = await Question.findOne({ level });
-        if (existingQuiz) {
-            return res.status(400).json({ error: 'Level already exists' });
-        }
-
         const data = new Question({
             level: level,
             id: id,
