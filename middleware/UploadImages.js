@@ -27,20 +27,6 @@ const multerFilter = (req, file, cb) => {
 
 
 
-// pdf
-
-const Storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "./files")
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now();
-
-    cb(null, uniqueSuffix + file.originalname)
-  }
-})
-
-const Upload = multer({storage: Storage})
 
 
 
@@ -54,34 +40,7 @@ const profilePhotoUpload = multer({
 
 
 
-// pdf photoUpload
-
-const pdfPhotoUpload = multer({
-  storage: multerStorage,
-  fileFilter: multerFilter,
-  limits: { fileSize: 1000000 },
-});
-
-const pdfPhotoResize = async (req, res, next) => {
-  // check if there is no file
-  if (!req.file) return next();
-
-  req.file.filename = `user-${Date.now()}-${req.file.originalname}`;
-
-  await sharp(req.file.buffer)
-    .resize(250, 250)
-    .toFormat("jpeg")
-    .jpeg({ quality: 90 })
-    .toFile(path.join(`public/images/pdfimages/${req.file.filename}`));
-
-  next();
-};
-
-
-
-
-
-//   Image Resizing
+// profile Image Resizing
 
 const profilePhotoResize = async (req, res, next) => {
   // check if there is no file
@@ -98,4 +57,22 @@ const profilePhotoResize = async (req, res, next) => {
   next();
 };
 
-module.exports = { profilePhotoUpload, profilePhotoResize,pdfPhotoUpload,pdfPhotoResize,Upload }
+
+// quiz photo Image Resizing
+const quizPhotoResize = async (req, res, next) => {
+  // check if there is no file
+  if (!req.file) return next();
+
+  req.file.filename = `user-${Date.now()}-${req.file.originalname}`;
+
+  await sharp(req.file.buffer)
+    .resize(250, 250)
+    .toFormat("jpeg")
+    .jpeg({ quality: 90 })
+    .toFile(path.join(`public/images/quiz/${req.file.filename}`));
+
+  next();
+};
+
+
+module.exports = { profilePhotoUpload, profilePhotoResize,quizPhotoResize}

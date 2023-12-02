@@ -6,19 +6,20 @@ const bodyParser = require("body-parser");
 const morgan = require("morgan");
 const mongoose = require("mongoose");
 const cloudinary = require('cloudinary');
-app.use("/files",express.static("files"))
+app.use("/files", express.static("files"))
 
 
 // Configure Cloudinary
 cloudinary.config({
-    cloud_name: process.env.Cloud_Name,
-    api_key: process.env.API_Key,
-    api_secret: process.env.API_Secret
-  });
+  cloud_name: process.env.Cloud_Name,
+  api_key: process.env.API_Key,
+  api_secret: process.env.API_Secret
+});
 
 
 const User = require("./routes/userRoute");
-const file = require("./routes/pdfRoute");
+const quiz = require("./routes/QuizRoute");
+
 
 // middleware calling here
 app.use(express.json());
@@ -31,15 +32,15 @@ app.use(morgan("tiny"));
 
 // routes calling here
 app.use(User);
-app.use(file)
+app.use(quiz);
 
 
 
-app.get(`/`,(req,res)=>{
+app.get(`/`, (req, res) => {
   res.status(200).send("Hello Quiz");
 })
 
-app.use("*",(req,res,next)=>{
+app.use("*", (req, res, next) => {
   res.status(400).send("Page Not Found!");
   next()
 })
@@ -50,7 +51,7 @@ app.use("*",(req,res,next)=>{
 
 // database connected
 mongoose.connect(process.env.MONGODB).then(() => {
-    console.log(`Database Connected!`)
+  console.log(`Database Connected!`)
 }).catch((err) => console.log(err))
 
 
