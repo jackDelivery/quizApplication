@@ -29,4 +29,40 @@ const createQuiz = asyncHandler(async (req, res) => {
 })
 
 
-module.exports = { createQuiz }
+// get quiz
+const getAllQuiz = asyncHandler(async (req, res) => {
+    try {
+        const data = QuizModel.find({});
+
+        if (!data) {
+            return res.status(400).send("Data not Found");
+        }
+
+        res.status(200).send(data);
+
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+})
+
+
+
+// get find id
+const getquizid = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    try {
+        let data = QuizModel.findById(id);
+
+        if (!data) {
+            return res.status(400).send("Data not Found");
+        }
+
+        res.status(200).send(data);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+})
+
+
+
+module.exports = { createQuiz, getAllQuiz,getquizid}
