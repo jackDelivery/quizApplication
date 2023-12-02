@@ -11,7 +11,7 @@ const createQuiz = asyncHandler(async (req, res) => {
 
         const existingQuiz = await QuizModel.findOne({ level });
         if (existingQuiz) {
-          return res.status(400).json({ error: 'Level already exists' });
+            return res.status(400).json({ error: 'Level already exists' });
         }
 
         const localPath = `public/images/quiz/${req.file.filename}`;
@@ -70,4 +70,22 @@ const getquizid = asyncHandler(async (req, res) => {
 
 
 
-module.exports = { createQuiz, getAllQuiz,getquizid}
+// update Quiz level
+
+const updateQuizLevel = asyncHandler(async (req, res) => {
+    const { id } = req.params;
+    const { isLoacked } = req.body;
+    try {
+        const data = await QuizModel.findByIdAndUpdate(id, {
+            isLoacked: isLoacked
+        }, { new: true })
+
+        res.status(200).json({ message: "isLoacked has been Updated", data: data })
+
+    } catch (error) {
+        res.status(500).send(error)
+    }
+})
+
+
+module.exports = { createQuiz, getAllQuiz, getquizid, updateQuizLevel }

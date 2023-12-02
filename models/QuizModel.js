@@ -11,7 +11,7 @@ const QuizSchema = new Schema({
     },
 
     isLoacked: {
-        type: String,
+        type: Boolean,
         default: true
     },
     image: {
