@@ -6,7 +6,8 @@ const QuizSchema = new Schema({
     level: {
         type: String,
         required: true,
-        trim: true
+        trim: true,
+        unique: true
     },
 
     isLoacked: {

@@ -9,6 +9,11 @@ const createQuiz = asyncHandler(async (req, res) => {
     const { level, isLoacked } = req.body;
     try {
 
+        const existingQuiz = await QuizModel.findOne({ level });
+        if (existingQuiz) {
+          return res.status(400).json({ error: 'Level already exists' });
+        }
+
         const localPath = `public/images/quiz/${req.file.filename}`;
 
         let imgUploaded = await CloudinaryCloud(localPath);
@@ -32,7 +37,7 @@ const createQuiz = asyncHandler(async (req, res) => {
 // get quiz
 const getAllQuiz = asyncHandler(async (req, res) => {
     try {
-        const data = QuizModel.find({});
+        const data = await QuizModel.find({});
 
         if (!data) {
             return res.status(400).send("Data not Found");
@@ -51,7 +56,7 @@ const getAllQuiz = asyncHandler(async (req, res) => {
 const getquizid = asyncHandler(async (req, res) => {
     const { id } = req.params;
     try {
-        let data = QuizModel.findById(id);
+        let data = await QuizModel.findById(id);
 
         if (!data) {
             return res.status(400).send("Data not Found");
