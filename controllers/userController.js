@@ -276,10 +276,24 @@ const loginAdmin = asyncHandler(async (req, res) => {
 
 
 
-// quiz level
+// Scooer Update
+
+const updateScorrer = asyncHandler(async (req, res) => {
+  const { _id } = req.user;
+  const { scorrer } = req.body;
+  try {
+    const update = await UserModel.findByIdAndUpdate(_id, {
+      scorrer: scorrer
+    }, { new: true });
+
+    res.status(200).send(update);
+  } catch (error) {
+    res.status(500).send(error)
+  }
+})
 
 
 
 
 
-module.exports = { registerUser, login, allProfiles, getUser, updateProfile, forgetPassword, resetPassword, loginAdmin }
+module.exports = { registerUser, login, allProfiles, getUser, updateProfile, forgetPassword, resetPassword, loginAdmin,updateScorrer }
