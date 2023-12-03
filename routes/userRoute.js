@@ -1,5 +1,5 @@
 const express = require("express");
-const { registerUser, login, allProfiles, getUser,updateProfile,forgetPassword,resetPassword,loginAdmin} = require("../controllers/userController");
+const { registerUser, login, allProfiles, getUser,updateProfile,forgetPassword,resetPassword,loginAdmin,updateScorrer} = require("../controllers/userController");
 const { profilePhotoResize, profilePhotoUpload } = require("../middleware/UploadImages");
 const {authMiddleware,isAdmin} = require("../middleware/authMidlleware");
 const router = express.Router();
@@ -30,7 +30,11 @@ router.route("/resetpassword").post(resetPassword)
 
 // admin login
 
-router.route("/admin").post(loginAdmin)
+router.route("/admin").post(loginAdmin);
+
+// scooer route
+router.route("/scorrer").put(authMiddleware,updateScorrer)
+
 
 module.exports = router;
 
