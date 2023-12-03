@@ -6,7 +6,6 @@ const questionSchema = new Schema({
     level: {
         type: String,
         required: true,
-        trim: true,
     },
     id: {
         type: Number,
