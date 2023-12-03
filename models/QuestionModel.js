@@ -8,7 +8,7 @@ const questionSchema = new Schema({
         required: true,
     },
     id: {
-        type: Number,
+        type: String,
         required: true
     },
     question: {
@@ -24,7 +24,7 @@ const questionSchema = new Schema({
         }
     },
     answer: {
-        type: Number,
+        type: String,
         required: true
     },
 },
