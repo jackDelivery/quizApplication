@@ -1,7 +1,7 @@
 const express = require("express");
-const { registerUser, login, allProfiles, getUser,updateProfile,forgetPassword,resetPassword,loginAdmin,updateScorrer} = require("../controllers/userController");
+const { registerUser, login, allProfiles, getUser, updateProfile, forgetPassword, resetPassword, loginAdmin, updateScorrer, inCrementScorrer, deCreamentScorrer } = require("../controllers/userController");
 const { profilePhotoResize, profilePhotoUpload } = require("../middleware/UploadImages");
-const {authMiddleware,isAdmin} = require("../middleware/authMidlleware");
+const { authMiddleware, isAdmin } = require("../middleware/authMidlleware");
 const router = express.Router();
 
 
@@ -33,7 +33,9 @@ router.route("/resetpassword").post(resetPassword)
 router.route("/admin").post(loginAdmin);
 
 // scooer route
-router.route("/scorrer").put(authMiddleware,updateScorrer)
+router.route("/scorrer").put(authMiddleware, updateScorrer);
+router.route("/scorrer/increment").put(authMiddleware, inCrementScorrer);
+router.route("/scorrer/decrement").put(authMiddleware, deCreamentScorrer);
 
 
 module.exports = router;

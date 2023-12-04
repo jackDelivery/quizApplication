@@ -276,6 +276,74 @@ const loginAdmin = asyncHandler(async (req, res) => {
 
 
 
+// increament
+
+const inCrementScorrer = asyncHandler(async (req, res) => {
+  const { _id } = req.user;
+  const { incrementValue } = req.body
+  try {
+    if (!_id || !incrementValue) {
+      return res.status(400).json({ error: 'User ID is required' });
+    }
+
+    // Find the user by ID and increment the scorrer value
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      _id,
+      { $inc: { scorrer: incrementValue } },
+      { new: true }
+    );
+
+    // Check if the user exists
+    if (!updatedUser) {
+      return res.status(404).json({ error: 'User ID and incrementValue are required' });
+    }
+
+    // Return the updated user
+    res.status(200).json(updatedUser);
+
+  } catch (error) {
+    res.status(500).send(error.message)
+  }
+})
+
+
+
+// decreament
+
+const deCreamentScorrer = asyncHandler(async (req, res) => {
+  const { _id } = req.user;
+  const { decrementValue } = req.body
+  try {
+    if (!_id || !decrementValue) {
+      return res.status(400).json({ error: 'User ID and decrementValue are required' });
+    }
+
+    // Find the user by ID and increment the scorrer value
+    const updatedUser = await UserModel.findByIdAndUpdate(
+      _id,
+      { $inc: { scorrer: -decrementValue } },
+      { new: true }
+    );
+
+    // Check if the user exists
+    if (!updatedUser) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    // Return the updated user
+    res.status(200).json(updatedUser);
+
+  } catch (error) {
+    res.status(500).send(error.message)
+  }
+})
+
+
+
+
+
+
+
 // Scooer Update
 
 const updateScorrer = asyncHandler(async (req, res) => {
@@ -288,7 +356,7 @@ const updateScorrer = asyncHandler(async (req, res) => {
 
     res.status(200).send(update);
   } catch (error) {
-    res.status(500).send(error)
+    res.status(500).send(error.message)
   }
 })
 
@@ -296,4 +364,4 @@ const updateScorrer = asyncHandler(async (req, res) => {
 
 
 
-module.exports = { registerUser, login, allProfiles, getUser, updateProfile, forgetPassword, resetPassword, loginAdmin,updateScorrer }
+module.exports = { registerUser, login, allProfiles, getUser, updateProfile, forgetPassword, resetPassword, loginAdmin, updateScorrer, inCrementScorrer, deCreamentScorrer }
