@@ -357,7 +357,24 @@ const updateScorrer = asyncHandler(async (req, res) => {
 
 
 
+// delete user
+const deleteUser = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  try {
+    const data = await UserModel.findByIdAndDelete(id);
+
+    if (!data) {
+      return res.status(400).send("User Not Found");
+    }
+
+    res.status(200).send("User Deleted")
+  } catch (error) {
+    res.status(500).send(error.message)
+  }
+})
 
 
 
-module.exports = { registerUser, login, allProfiles, getUser, updateProfile, forgetPassword, resetPassword, loginAdmin, updateScorrer, inCrementScorrer, deCreamentScorrer }
+
+
+module.exports = { registerUser, login, allProfiles, getUser, updateProfile, forgetPassword, resetPassword, loginAdmin, updateScorrer, inCrementScorrer, deCreamentScorrer,deleteUser }

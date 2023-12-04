@@ -7,8 +7,6 @@ const quizSchema = new Schema({
     title: String,
     description: String,
     questions: [{ text: String, answers: [String], correctAnswer: Number }],
-    locked: { type: Boolean, default: true },
-    userAnswers: [], // Array of user attempts per user ID
 })
 
 

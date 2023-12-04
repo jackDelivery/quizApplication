@@ -1,5 +1,5 @@
 const express = require("express");
-const { registerUser, login, allProfiles, getUser, updateProfile, forgetPassword, resetPassword, loginAdmin, updateScorrer, inCrementScorrer, deCreamentScorrer } = require("../controllers/userController");
+const { registerUser, login, allProfiles, getUser, updateProfile, forgetPassword, resetPassword, loginAdmin, updateScorrer, inCrementScorrer, deCreamentScorrer, deleteUser } = require("../controllers/userController");
 const { profilePhotoResize, profilePhotoUpload } = require("../middleware/UploadImages");
 const { authMiddleware, isAdmin } = require("../middleware/authMidlleware");
 const router = express.Router();
@@ -36,6 +36,7 @@ router.route("/admin").post(loginAdmin);
 router.route("/scorrer").put(authMiddleware, updateScorrer);
 router.route("/scorrer/increment").put(authMiddleware, inCrementScorrer);
 router.route("/scorrer/decrement").put(authMiddleware, deCreamentScorrer);
+router.route("/delete/users").delete(authMiddleware, isAdmin, deleteUser);
 
 
 module.exports = router;
