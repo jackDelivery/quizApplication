@@ -339,11 +339,6 @@ const deCreamentScorrer = asyncHandler(async (req, res) => {
 })
 
 
-
-
-
-
-
 // Scooer Update
 
 const updateScorrer = asyncHandler(async (req, res) => {
@@ -359,6 +354,7 @@ const updateScorrer = asyncHandler(async (req, res) => {
     res.status(500).send(error.message)
   }
 })
+
 
 
 

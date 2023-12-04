@@ -20,7 +20,7 @@ cloudinary.config({
 const User = require("./routes/userRoute");
 const quiz = require("./routes/QuizRoute");
 const question = require("./routes/QuestionRoute");
-
+const testing = require("./routes/TestingRoute");
 
 // middleware calling here
 app.use(express.json());
@@ -34,7 +34,8 @@ app.use(morgan("tiny"));
 // routes calling here
 app.use(User);
 app.use(quiz);
-app.use(question)
+app.use(question);
+app.use(testing);
 
 
 app.get(`/`, (req, res) => {

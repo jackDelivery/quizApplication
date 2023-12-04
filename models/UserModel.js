@@ -42,6 +42,11 @@ const userSchema = new Schema({
         default: 0
     },
 
+    unlocked: {
+        type: [String],
+        default: "1"
+    },
+
     otp: { type: String },
     otpExpirationTime: { type: Date },
     passwordChangeAt: Date,
