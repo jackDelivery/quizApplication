@@ -1,5 +1,5 @@
 const express = require("express");
-const { registerUser, login, allProfiles, getUser, updateProfile, forgetPassword, resetPassword, loginAdmin, updateScorrer, inCrementScorrer, deCreamentScorrer, deleteUser } = require("../controllers/userController");
+const { registerUser, login, allProfiles, getUser, updateProfile, forgetPassword, resetPassword, loginAdmin, updateScorrer, inCrementScorrer, deCreamentScorrer, deleteUser,Unloacked } = require("../controllers/userController");
 const { profilePhotoResize, profilePhotoUpload } = require("../middleware/UploadImages");
 const { authMiddleware, isAdmin } = require("../middleware/authMidlleware");
 const router = express.Router();
@@ -36,7 +36,16 @@ router.route("/admin").post(loginAdmin);
 router.route("/scorrer").put(authMiddleware, updateScorrer);
 router.route("/scorrer/increment").put(authMiddleware, inCrementScorrer);
 router.route("/scorrer/decrement").put(authMiddleware, deCreamentScorrer);
-router.route("/delete/users").delete(authMiddleware, isAdmin, deleteUser);
+
+// delete user
+router.route("/delete/user:/id").delete(authMiddleware, isAdmin, deleteUser);
+
+
+// update unlocked
+router.route("/updateunlocked").put(authMiddleware,Unloacked)
+
+
+
 
 
 module.exports = router;

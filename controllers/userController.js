@@ -375,6 +375,28 @@ const deleteUser = asyncHandler(async (req, res) => {
 
 
 
+// update unlocked
+const Unloacked = asyncHandler(async (req, res) => {
+  const { _id } = req.user;
+  const { newString } = req.body;
+  try {
+    // Find the document by ID
+    const document = await UserModel.findById(_id);
+
+    // Update the "unlocked" array by adding the new string
+    document.unlocked.push(newString);
+
+    // Save the updated document
+    const updatedDocument = await document.save();
+
+    res.status(200).json(updatedDocument);
+
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+});
 
 
-module.exports = { registerUser, login, allProfiles, getUser, updateProfile, forgetPassword, resetPassword, loginAdmin, updateScorrer, inCrementScorrer, deCreamentScorrer,deleteUser }
+
+
+module.exports = { registerUser, login, allProfiles, getUser, updateProfile, forgetPassword, resetPassword, loginAdmin, updateScorrer, inCrementScorrer, deCreamentScorrer, deleteUser, Unloacked }
