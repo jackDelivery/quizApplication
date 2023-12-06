@@ -21,6 +21,8 @@ const User = require("./routes/userRoute");
 const quiz = require("./routes/QuizRoute");
 const question = require("./routes/QuestionRoute");
 const contact = require("./routes/ContactRoute");
+const rating = require("./routes/RatingRoute");
+
 
 // middleware calling here
 app.use(express.json());
@@ -35,7 +37,8 @@ app.use(morgan("tiny"));
 app.use(User);
 app.use(quiz);
 app.use(question);
-app.use(contact)
+app.use(contact);
+app.use(rating);
 
 
 app.get(`/`, (req, res) => {
