@@ -5,15 +5,16 @@ const CloudinaryCloud = require("./utils/CloudinaryCloud");
 const sendEmail = require("./utils/SendEmail");
 const bcryptjs = require("bcryptjs");
 const generateRefreshToken = require("../config/RefreshToken");
-
-
+const { sendVerificationEmail } = require("./utils/VerificationEmail");
+const { VerificationEmail } = require("./utils/VerifyEmail");
 
 // register
 
 const registerUser = asyncHandler(async (req, res) => {
-  try {
-    const { username, email, password, dob } = req.body;
+  const { username, email, password, dob } = req.body;
+  const verificationToken = Math.random().toString(36).substring(7);
 
+  try {
     // Check if the email is already registered
     const existingUser = await UserModel.findOne({ email });
     if (existingUser) {
@@ -34,6 +35,7 @@ const registerUser = asyncHandler(async (req, res) => {
       password,
       dob,
       profilePhoto: imgUploaded?.url,
+      verificationToken
     });
 
     // Save user to the database
@@ -45,13 +47,41 @@ const registerUser = asyncHandler(async (req, res) => {
       message,
     });
 
+    await sendVerificationEmail(email, verificationToken,newUser.username)
     // Respond with a success message and user ID
-    res.status(201).json({ message: 'Registration successful', userId: newUser._id });
+    res.status(201).json({ message: 'User registered successfully. Please check your email for verification.', userId: newUser._id });
   } catch (error) {
     console.error('Error in Register API:', error);
     res.status(500).json({ error: 'Internal Server Error' });
   }
 });
+
+
+
+// Verified
+const VerifiedEmail = asyncHandler(async (req, res) => {
+  const { token } = req.body;
+  try {
+    const user = await UserModel.findOne({ verificationToken: token });
+
+    if (!user) {
+      return res.status(404).json({ error: 'Invalid verification token.' });
+    }
+
+    // Update the user's status to verified
+    user.isVerified = true;
+    user.verificationToken = undefined;
+    await user.save();
+
+    await VerificationEmail(user?.email)
+
+    res.json({ message: 'Email verification successful.' });
+  } catch (error) {
+    console.error('Error in Verify API:', error);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+})
+
 
 
 // login here
@@ -399,4 +429,4 @@ const Unloacked = asyncHandler(async (req, res) => {
 
 
 
-module.exports = { registerUser, login, allProfiles, getUser, updateProfile, forgetPassword, resetPassword, loginAdmin, updateScorrer, inCrementScorrer, deCreamentScorrer, deleteUser, Unloacked }
+module.exports = { registerUser, login, allProfiles, getUser, updateProfile, forgetPassword, resetPassword, loginAdmin, updateScorrer, inCrementScorrer, deCreamentScorrer, deleteUser, Unloacked, VerifiedEmail }

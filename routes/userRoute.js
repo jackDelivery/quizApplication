@@ -1,5 +1,5 @@
 const express = require("express");
-const { registerUser, login, allProfiles, getUser, updateProfile, forgetPassword, resetPassword, loginAdmin, updateScorrer, inCrementScorrer, deCreamentScorrer, deleteUser,Unloacked } = require("../controllers/userController");
+const { registerUser, login, allProfiles, getUser, updateProfile, forgetPassword, resetPassword, loginAdmin, updateScorrer, inCrementScorrer, deCreamentScorrer, deleteUser,Unloacked,VerifiedEmail } = require("../controllers/userController");
 const { profilePhotoResize, profilePhotoUpload } = require("../middleware/UploadImages");
 const { authMiddleware, isAdmin } = require("../middleware/authMidlleware");
 const router = express.Router();
@@ -12,6 +12,9 @@ router.route("/register").post(profilePhotoUpload.single("image"), profilePhotoR
 
 // login
 router.route("/login").post(login);
+
+// verify
+router.route("/verify").post(VerifiedEmail);
 
 // all users
 router.route("/allusers").get(authMiddleware, allProfiles);
