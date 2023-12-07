@@ -12,7 +12,15 @@ const { VerificationEmail } = require("./utils/VerifyEmail");
 
 const registerUser = asyncHandler(async (req, res) => {
   const { username, email, password, dob } = req.body;
-  const verificationToken = Math.random().toString(36).substring(7);
+  function generateVerificationCode() {
+    const min = 100000; // Minimum 6-digit number
+    const max = 999999; // Maximum 6-digit number
+
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  }
+
+  const verificationToken = generateVerificationCode();
+
 
   try {
     // Check if the email is already registered
@@ -47,7 +55,7 @@ const registerUser = asyncHandler(async (req, res) => {
       message,
     });
 
-    await sendVerificationEmail(email, verificationToken,newUser.username)
+    await sendVerificationEmail(email, verificationToken, newUser.username)
     // Respond with a success message and user ID
     res.status(201).json({ message: 'User registered successfully. Please check your email for verification.', userId: newUser._id });
   } catch (error) {
