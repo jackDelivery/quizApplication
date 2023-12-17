@@ -22,7 +22,7 @@ const quiz = require("./routes/QuizRoute");
 const question = require("./routes/QuestionRoute");
 const contact = require("./routes/ContactRoute");
 const rating = require("./routes/RatingRoute");
-
+const category = require("./routes/CategoryRoute");
 
 // middleware calling here
 app.use(express.json());
@@ -39,7 +39,7 @@ app.use(quiz);
 app.use(question);
 app.use(contact);
 app.use(rating);
-
+app.use(category)
 
 app.get(`/`, (req, res) => {
   res.status(200).send("Hello Quiz");

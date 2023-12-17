@@ -3,6 +3,10 @@ const { Schema } = mongoose;
 
 
 const questionSchema = new Schema({
+    title: {
+        type: String,
+        required: true
+    },
     level: {
         type: String,
         required: true,

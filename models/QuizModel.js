@@ -13,7 +13,7 @@ const QuizSchema = new Schema({
     isLoacked: {
         type: Boolean,
         default: true
-    },   
+    },
     image: {
         type: String,
         default: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
@@ -32,7 +32,7 @@ const QuizSchema = new Schema({
 )
 
 
-const QuizModel = mongoose.model("QUIZ",QuizSchema);
+const QuizModel = mongoose.model("QUIZ", QuizSchema);
 
 
 module.exports = { QuizModel };
