@@ -8,7 +8,6 @@ const CloudinaryCloud = require("./utils/CloudinaryCloud");
 const createQuiz = asyncHandler(async (req, res) => {
     const { level, isLoacked } = req.body;
     try {
-
         const existingQuiz = await QuizModel.findOne({ level });
         if (existingQuiz) {
             return res.status(400).json({ error: 'Level already exists' });
@@ -19,6 +18,7 @@ const createQuiz = asyncHandler(async (req, res) => {
         let imgUploaded = await CloudinaryCloud(localPath);
 
         const createQuizLevel = new QuizModel({
+            title: req.body.title,
             level: level,
             isLoacked: isLoacked,
             image: imgUploaded?.url
@@ -37,13 +37,34 @@ const createQuiz = asyncHandler(async (req, res) => {
 // get quiz
 const getAllQuiz = asyncHandler(async (req, res) => {
     try {
-        const data = await QuizModel.find({});
+        const queryObj = { ...req.query };
+        const excludeFields = ["page", "sort", "limit", "fields"];
+        excludeFields.forEach((el) => delete queryObj[el]);
+        let queryStr = JSON.stringify(queryObj);
+        queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (match) => `$${match}`);
 
-        if (!data) {
-            return res.status(400).send("Data not Found");
+        let query = QuizModel.find(JSON.parse(queryStr));
+
+
+        if (req.query.sort) {
+            const sortBy = req.query.sort.split(",").join(" ");
+            query = query.sort(sortBy);
+        } else {
+            query = query.sort("-createdAt");
         }
 
-        res.status(200).send(data);
+
+        // limiting the fields
+
+        if (req.query.fields) {
+            const fields = req.query.fields.split(",").join(" ");
+            query = query.select(fields);
+        } else {
+            query = query.select("-__v");
+        }
+
+        const data = await query;
+        res.json(data);
 
     } catch (error) {
         res.status(500).send(error.message)

@@ -3,6 +3,11 @@ const { Schema } = mongoose;
 
 
 const QuizSchema = new Schema({
+    title: {
+        type: String,
+        required: true,
+        trim: true
+    },
     level: {
         type: String,
         required: true,
