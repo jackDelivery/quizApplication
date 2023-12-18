@@ -13,20 +13,19 @@ const createQuiz = asyncHandler(async (req, res) => {
             return res.status(400).json({ error: 'Level already exists' });
         }
 
-        const localPath = `public/images/quiz/${req.file.filename}`;
+        // const localPath = `public/images/quiz/${req.file.filename}`;
 
-        let imgUploaded = await CloudinaryCloud(localPath);
+        // let imgUploaded = await CloudinaryCloud(localPath);
 
         const createQuizLevel = new QuizModel({
             title: req.body.title,
             level: level,
-            isLoacked: isLoacked,
-            image: imgUploaded?.url
+            isLoacked: isLoacked
         })
 
         await createQuizLevel.save();
 
-        res.status(201).json({ message: 'Quiz Created', quiz: createQuizLevel._id });
+        res.status(201).json({ message: 'Quiz Created', quiz: createQuizLevel });
 
     } catch (error) {
         res.status(500).send(error)
