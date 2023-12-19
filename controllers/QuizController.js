@@ -8,10 +8,7 @@ const CloudinaryCloud = require("./utils/CloudinaryCloud");
 const createQuiz = asyncHandler(async (req, res) => {
     const { level, isLoacked } = req.body;
     try {
-        const existingQuiz = await QuizModel.findOne({ level });
-        if (existingQuiz) {
-            return res.status(400).json({ error: 'Level already exists' });
-        }
+       
 
         // const localPath = `public/images/quiz/${req.file.filename}`;
 
