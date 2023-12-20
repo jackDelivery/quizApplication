@@ -447,8 +447,23 @@ const unLockedData = asyncHandler(async (req, res) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    // Update unlocked entries for the user
-    user.unlocked = unlocked;
+    // Merge new unlocked values with existing ones
+    unlocked.forEach((newEntry) => {
+      const existingEntryIndex = user.unlocked.findIndex(
+        (existingEntry) => existingEntry.type === newEntry.type
+      );
+
+      if (existingEntryIndex !== -1) {
+        // Update existing entry with new values
+        user.unlocked[existingEntryIndex].values = [
+          ...user.unlocked[existingEntryIndex].values,
+          ...newEntry.values,
+        ];
+      } else {
+        // Add new entry to the array
+        user.unlocked.push(newEntry);
+      }
+    });
 
     // Save the user with the updated unlocked field
     const updatedUser = await user.save();
