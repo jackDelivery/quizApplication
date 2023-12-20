@@ -43,10 +43,23 @@ const userSchema = new Schema({
     },
     isVerified: { type: Boolean, default: false },
     verificationToken: { type: String },
-    unlocked: {
-        type: [String],
-        default: "1"
-    },
+    unlocked: [
+        {
+            type: {
+                type: String,
+                enum: ["Math", "Urdu", "Science", "English", "Islamiat", "Physics", "Chemistry", "Biology", "Sindhi", "English Literature"], // Add more types as needed   
+            },
+            values: {
+                type: [Number],
+                default: [],
+            },
+        },
+    ],
+
+    // unlocked: {
+    //     type: [String],
+    //     default: "1"
+    // },
 
     otp: { type: String },
     otpExpirationTime: { type: Date },

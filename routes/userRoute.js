@@ -1,5 +1,5 @@
 const express = require("express");
-const { registerUser, login, allProfiles, getUser, updateProfile, forgetPassword, resetPassword, loginAdmin, updateScorrer, inCrementScorrer, deCreamentScorrer, deleteUser,Unloacked,VerifiedEmail } = require("../controllers/userController");
+const { registerUser, login, allProfiles, getUser, updateProfile, forgetPassword, resetPassword, loginAdmin, updateScorrer, inCrementScorrer, deCreamentScorrer, deleteUser, Unloacked, VerifiedEmail, unLockedData } = require("../controllers/userController");
 const { profilePhotoResize, profilePhotoUpload } = require("../middleware/UploadImages");
 const { authMiddleware, isAdmin } = require("../middleware/authMidlleware");
 const router = express.Router();
@@ -45,9 +45,11 @@ router.route("/delete/user:/id").delete(authMiddleware, isAdmin, deleteUser);
 
 
 // update unlocked
-router.route("/updateunlocked").put(authMiddleware,Unloacked)
+router.route("/updateunlocked").put(authMiddleware, Unloacked)
 
 
+// new unlocked data
+router.route("/unlocked").put(authMiddleware, unLockedData)
 
 
 

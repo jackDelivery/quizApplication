@@ -65,7 +65,6 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 
-
 // Verified
 const VerifiedEmail = asyncHandler(async (req, res) => {
   const { token } = req.body;
@@ -144,7 +143,7 @@ const login = asyncHandler(async (req, res) => {
 
 const allProfiles = asyncHandler(async (req, res) => {
   try {
-    let user = await UserModel.find({});
+    let user = await UserModel.find({}).populate("unlocked");
 
     if (!user) {
       res.status(200).send("Users not found");
@@ -435,6 +434,34 @@ const Unloacked = asyncHandler(async (req, res) => {
 });
 
 
+// new updated unloacked here
+const unLockedData = asyncHandler(async (req, res) => {
+  try {
+    const { _id } = req.user;
+    const { unlocked } = req.body;
+
+    // Find the user by ID
+    const user = await UserModel.findById(_id);
+
+    if (!user) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    // Update unlocked entries for the user
+    user.unlocked = unlocked;
+
+    // Save the user with the updated unlocked field
+    const updatedUser = await user.save();
+
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+})
 
 
-module.exports = { registerUser, login, allProfiles, getUser, updateProfile, forgetPassword, resetPassword, loginAdmin, updateScorrer, inCrementScorrer, deCreamentScorrer, deleteUser, Unloacked, VerifiedEmail }
+
+
+
+
+module.exports = { registerUser, login, allProfiles, getUser, updateProfile, forgetPassword, resetPassword, loginAdmin, updateScorrer, inCrementScorrer, deCreamentScorrer, deleteUser, Unloacked, VerifiedEmail, unLockedData }
